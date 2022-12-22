@@ -1,4 +1,4 @@
-const ws = new WebSocket("ws://localhost:8001/");
+const ws = new WebSocket("https://pbl-socketserver.onrender.com");
 const input = document.querySelector('input');
 const button = document.querySelector('button');
 const chatWindow = document.querySelector('.chat-window')
