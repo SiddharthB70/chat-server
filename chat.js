@@ -41,8 +41,8 @@ window.onload = () => {
 
 function initialise(){
     console.log(userName)
-    ws = new WebSocket("ws://localhost:8001/");
-    // ws = new WebSocket("wss://pbl-socketserver.onrender.com/");
+    // ws = new WebSocket("ws://localhost:8001/");
+    ws = new WebSocket("wss://pbl-socketserver.onrender.com/");
     ws.addEventListener("open",()=>{
         const event = {type: "connection",value:"ok",name:`${userName}`};
         ws.send(JSON.stringify(event));
