@@ -1,20 +1,22 @@
 import asyncio
-import websockets
 import json
 
+import websockets
+
 clients = []
+clientNames = []
 
 async def handler(websocket):
     async for message in websocket:
-        message = json.loads(message)
-        if message['type'] == "connection":
+        msg = json.loads(message)
+        if msg['type'] == "connection":
             if websocket not in clients:
                 clients.append(websocket)
         else:
             broadClients = clients.copy()
             if websocket in broadClients:
                 broadClients.remove(websocket)
-            websockets.broadcast(broadClients,message['value'])
+            websockets.broadcast(broadClients,message)
 
 
 async def main():
