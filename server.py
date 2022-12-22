@@ -12,7 +12,8 @@ async def handler(websocket):
                 clients.append(websocket)
         else:
             broadClients = clients.copy()
-            broadClients.remove(websocket)
+            if websocket in broadClients:
+                broadClients.remove(websocket)
             websockets.broadcast(broadClients,message['value'])
 
 
