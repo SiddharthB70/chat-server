@@ -7,28 +7,35 @@ clients = []
 clientNames = []
 
 async def handler(websocket):
-    async for message in websocket:
-        msg = json.loads(message)
-        print(msg)
-        if msg['type'] == "connection":
-            if websocket not in clients:
-                clients.append(websocket)
-                clientNames.append(msg['name'])
-            if len(clientNames) != 0:
-                convoClients = (", ".join(clientNames)) + " in conversation"
-                senderMessage = {"type": "senderJoined","value": convoClients}
-                await websocket.send(json.dumps(senderMessage))
-        # else:
-        elif msg['type']=="connectionClosed":
-            print(msg)
+    while True:
+        try:
+            message = await websocket.recv()
+            msg = json.loads(message)
+            if msg['type'] == "connection":
+                if websocket not in clients:
+                    clients.append(websocket)
+                    clientNames.append(msg['name'])
+                if len(clientNames) != 0:
+                    convoClients = (", ".join(clientNames)) + " in conversation"
+                    senderMessage = {"type": "senderJoined","value": convoClients}
+                    await websocket.send(json.dumps(senderMessage))
+            # else:
+            # elif msg['type']=="connectionClosed":
+            #     print(msg)
+            #     clients.remove(websocket)
+            #     clientNames.remove(msg['name'])
+
+            broadClients = clients.copy()
+            if websocket in broadClients:
+                broadClients.remove(websocket)
+            websockets.broadcast(broadClients,message)
+        except websockets.ConnectionClosedOK:
+            pos = clients.index(websocket)
             clients.remove(websocket)
-            clientNames.remove(msg['name'])
-
-        broadClients = clients.copy()
-        if websocket in broadClients:
-            broadClients.remove(websocket)
-        websockets.broadcast(broadClients,message)
-
+            name = clientNames.pop(pos)
+            m = {"type":"connectionClosed","name":name}
+            websockets.broadcast(clients,json.dumps(m))
+            break
 
 async def main():
     async with websockets.serve(handler, "", 8001):
