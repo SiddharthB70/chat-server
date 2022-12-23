@@ -29,7 +29,7 @@ async def handler(websocket):
             if websocket in broadClients:
                 broadClients.remove(websocket)
             websockets.broadcast(broadClients,message)
-        except websockets.ConnectionClosedOK:
+        except websockets.ConnectionClosedOK or websockets.ConnectionClosedError:
             pos = clients.index(websocket)
             clients.remove(websocket)
             name = clientNames.pop(pos)
