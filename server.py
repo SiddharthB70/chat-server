@@ -12,11 +12,16 @@ async def handler(websocket):
         if msg['type'] == "connection":
             if websocket not in clients:
                 clients.append(websocket)
-        else:
-            broadClients = clients.copy()
-            if websocket in broadClients:
-                broadClients.remove(websocket)
-            websockets.broadcast(broadClients,message)
+                clientNames.append(msg['name'])
+            if len(clientNames) != 0:
+                convoClients = (", ".join(clientNames)) + " in conversation"
+                senderMessage = {"type": "senderJoined","value": convoClients}
+                await websocket.send(json.dumps(senderMessage))
+        # else:
+        broadClients = clients.copy()
+        if websocket in broadClients:
+            broadClients.remove(websocket)
+        websockets.broadcast(broadClients,message)
 
 
 async def main():

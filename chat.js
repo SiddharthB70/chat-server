@@ -7,7 +7,13 @@ let userName
 
 function receiveMessage(msg){
     const message = JSON.parse(msg);
-    addMessage(message.value,"receiver",message.name);
+    if(message.type == "data")
+        addMessage(message.value,"receiver",message.name);
+    else if(message.type == "connection"){
+        addMessage(message.name+" has joined","joined")
+    }
+    else if (message.type == "senderJoined")
+        addMessage(message.value,"joined")
 }
 
 function sendMessage(){
@@ -25,6 +31,9 @@ function addMessage(data,messageType,messenger = null){
         message.classList.add("receiver");
         message.textContent += messenger + ": ";
     }
+    if(messageType == "joined"){
+        message.classList.add("center");
+    }
     message.textContent += data;
     chatWindow.appendChild(message);
 }
@@ -40,7 +49,6 @@ window.onload = () => {
 }
 
 function initialise(){
-    console.log(userName)
     // ws = new WebSocket("ws://localhost:8001/");
     ws = new WebSocket("wss://pbl-socketserver.onrender.com/");
     ws.addEventListener("open",()=>{
