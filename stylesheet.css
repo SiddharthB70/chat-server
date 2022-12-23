@@ -63,8 +63,12 @@ body{
 .receiver{
     align-self: flex-end;
     background-color: rgb(153, 150, 150);
+    text-align: center;
 }
 
 .center{
     align-self: center;
+    background-color: black;
+    color: white;
+    text-align: center;
 }

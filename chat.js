@@ -7,6 +7,7 @@ let userName
 
 function receiveMessage(msg){
     const message = JSON.parse(msg);
+    // console.log(message.type)
     if(message.type == "data")
         addMessage(message.value,"receiver",message.name);
     else if(message.type == "connection"){
@@ -14,6 +15,9 @@ function receiveMessage(msg){
     }
     else if (message.type == "senderJoined")
         addMessage(message.value,"joined")
+    else if (message.type == "connectionClosed"){
+        addMessage(message.name + " has left","joined")        
+    }
 }
 
 function sendMessage(){
@@ -33,6 +37,7 @@ function addMessage(data,messageType,messenger = null){
     }
     if(messageType == "joined"){
         message.classList.add("center");
+        
     }
     message.textContent += data;
     chatWindow.appendChild(message);
@@ -63,4 +68,10 @@ function initialise(){
     })
     ws.addEventListener("message",({data})=>{receiveMessage(data);})
     input.value = "";
+    // ws.addEventListener("close",sendCloseMessage)
 }
+
+// function sendCloseMessage(){
+//     alert("check")
+//     ws.send(JSON.stringify({type: "connectionClosed", name: `${userName}`}))
+// }

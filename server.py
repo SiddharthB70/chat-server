@@ -9,6 +9,7 @@ clientNames = []
 async def handler(websocket):
     async for message in websocket:
         msg = json.loads(message)
+        print(msg)
         if msg['type'] == "connection":
             if websocket not in clients:
                 clients.append(websocket)
@@ -18,6 +19,11 @@ async def handler(websocket):
                 senderMessage = {"type": "senderJoined","value": convoClients}
                 await websocket.send(json.dumps(senderMessage))
         # else:
+        elif msg['type']=="connectionClosed":
+            print(msg)
+            clients.remove(websocket)
+            clientNames.remove(msg['name'])
+
         broadClients = clients.copy()
         if websocket in broadClients:
             broadClients.remove(websocket)
