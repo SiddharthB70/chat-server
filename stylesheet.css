@@ -14,10 +14,16 @@ body{
     gap: 20px
 }
 
+.window-wrapper{
+    display: flex;
+    overflow: hidden auto;
+    flex-direction: column-reverse;
+}
+
 .chat-window{
     display: flex;
     flex-direction: column;
-    overflow: hidden auto;
+    /* overflow: hidden auto; */
     gap: 10px;
 }
 
